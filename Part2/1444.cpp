@@ -1,94 +1,81 @@
 #include <iostream>
 #include <cmath>
+#include <algorithm>
 
-#define PI 3.141592653589793238462643383279502884197169399375105820974
+using namespace std;
 
-/**
- * Для начала нужно понять, что всегда можно обойти все тыквы.
- * Как это достигается? Найдем угол до каждой тыквы от начальной.
- * Отсортируем углы. При одинаковом угле сначала элефпотам должен посетить ту, которая ближе к нему,
- * потом по прямой дойти до остальных.
- * Т.к. все тыквы отсортированы по величине угла от начальной, то пока элефпотам идет до следущей тыквы, он не
- * пересечет свои следы (т.к. элефпотам еще ни разу не был ни в одной из точек плоскости, угол которой выше,
- * чем тот, на котором лежит предыдущая тыква)
- */
+#define ll long long
+#define PI 3.14159265358979323846
+#define EPS 1e-10
 
-struct point {
-    long long int x;
-    long long int y;
+struct Point {
+    ll x;
+    ll y;
     double angle;
-    int num;
+    int id;
+    double len;
 };
-int n;
-point p[30001];
 
-int get_start() {
-    double max_a = 90 - p[n - 1].angle + 270 + p[1].angle;
-    int max_i = 1;
-    for (int i = 1; i < n - 1; ++i) {
-        if (p[i + 1].angle - p[i].angle > max_a) {
-            max_a = p[i + 1].angle - p[i].angle;
-            max_i = i + 1;
-        }
+bool compare(Point p1, Point p2) {
+    if (abs(p1.angle - p2.angle) > EPS) {
+        return p1.angle < p2.angle;
     }
-    return max_i;
-}
 
-int comp(const void *v1, const void *v2) {
-    const point *p1 = (point *) v1;
-    const point *p2 = (point *) v2;
-    if (p1->angle - p2->angle > 1e-10) {
-        return 1;
-    } else if (p1->angle - p2->angle < -1e-10) {
-        return -1;
-    } else {
-        if ((p1->x - p[0].x) * (p1->x - p[0].x) + (p1->y - p[0].y) * (p1->y - p[0].y) >
-            (p2->x - p[0].x) * (p2->x - p[0].x) + (p2->y - p[0].y) * (p2->y - p[0].y)) {
-            return 1;
-        } else {
-            return -1;
-        }
-    }
+    return p1.len < p2.len;
 }
 
 int main() {
-    std::cin >> n;
-    for (int i = 0; i < n; ++i) {
-        std::cin >> p[i].x;
-        std::cin >> p[i].y;
-        p[i].num = i;
+    int n;
+    Point p[30001];
+
+    cin >> n;
+    for (int i = 0; i < n; i++) {
+        cin >> p[i].x;
+        cin >> p[i].y;
+        p[i].id = i;
+
         if (i == 0) {
             p[i].angle = INT64_MIN;
+            p[i].len = 0;
             continue;
         }
-        if (p[i].x - p[0].x == 0) {
+
+        if (p[i].x == p[0].x) {
             p[i].angle = (p[i].y > p[0].y) ? 90 : -90;
+            p[i].len = abs(p[i].y - p[0].y);
             continue;
         }
+
         p[i].angle = atan((double) (p[i].y - p[0].y) / (p[i].x - p[0].x)) * 180.0 / PI;
-        if ((p[i].x - p[0].x) <= 0) {
+        if (p[i].x <= p[0].x) {
             p[i].angle -= 180;
         }
+
+        p[i].len = abs(sqrt((double) (pow((p[i].x - p[0].x), 2) + pow((p[i].y - p[0].y), 2))));
     }
 
-    std::qsort(p, n, sizeof(point), comp);
+    sort(p, p + n, compare);
 
-//    for (int i = 0; i < n; ++i) {
-//        std::cout << "x: " << p[i].x << " y: " << p[i].y << " angle: " << p[i].angle << " #" << p[i].num << std::endl;
-//    }
+    double max_a = 360 + p[1].angle - p[n - 1].angle;
+    int k = 1;
 
-    std::cout << n << std::endl;
-
-    int k = get_start();
-
-    std::cout << 1 << std::endl;
-
-    for (int i = k; i < n; ++i) {
-        std::cout << p[i].num + 1 << std::endl;
+    for (int i = 1; i < n - 1; i++) {
+        if (p[i + 1].angle - p[i].angle > max_a) {
+            max_a = p[i + 1].angle - p[i].angle;
+            k = i + 1;
+        }
     }
 
-    for (int i = 1; i < k; ++i) {
-        std::cout << p[i].num + 1 << std::endl;
+    cout << n << endl;
+    cout << 1 << endl;
+
+    for (int i = k; i < n; i++) {
+        cout << p[i].id + 1 << endl;
     }
+
+    for (int i = 1; i < k; i++) {
+        cout << p[i].id + 1 << endl;
+    }
+
     return 0;
 }

@@ -1,37 +1,32 @@
 #include <iostream>
-#include <bits/stdc++.h>
+#include <algorithm>
 
-/**
- * Т.к. люди ходят только параллельно оси ох и оу, то результат - это сумма расстояний между каждым домом с каждым
- * по х и у координатам.
- * Сохраним все координаты и отсортируем.
- * Между каждой парой соседних домов узнаем растояние r и узнаем какое количество человек по ней проходит
- * (а именно i челоаек справа и (n - i) слева). Следовательно, суммарно по этой тропинке пройдут r*i*(n-i)
- * Итоговую сумму разделим на количество тропинок между домами для получения среднего результата.
- */
+using namespace std;
 
-bool comp(long long a, long long b) {
-    return a < b;
-}
+#define ll long long
+#define ull unsigned long long
 
 int main() {
-    long long n;
-    std::cin >> n;
-    long long x_s[n];
-    long long y_s[n];
-    long long sum = 0;
-    for (long long i = 0; i < n; ++i) {
-        std::cin >> x_s[i] >> y_s[i];
-    }
-    std::sort(x_s, x_s + n, comp);
-    std::sort(y_s, y_s + n, comp);
+    ll n;
+    cin >> n;
+    ull x[n];
+    ull y[n];
+    ull sum = 0l;
 
-    for (long long i = 0; i < n - 1; ++i) {
-        sum += (x_s[i + 1] - x_s[i]) * (i + 1) * (n - i - 1);
-        sum += (y_s[i + 1] - y_s[i]) * (i + 1) * (n - i - 1);
+    for (ll i = 0; i < n; i++) {
+        cin >> x[i] >> y[i];
     }
 
-    sum = 2 * sum / (n * (n - 1));
-    std::cout << sum;
+    sort(x, x + n);
+    sort(y, y + n);
+
+    for (ll i = 1; i < n; i++) {
+        sum += (x[i] - x[i - 1]) * i * (n - i);
+        sum += (y[i] - y[i - 1]) * i * (n - i);
+    }
+
+    sum = 2l * sum / (n * (n - 1));
+    cout << sum;
+
     return 0;
 }
