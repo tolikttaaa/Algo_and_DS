@@ -1,20 +1,17 @@
 #include <iostream>
-#include <vector>
 
 using namespace std;
 
 int main() {
     int ans = 100000;
 
-    vector<int> a;
     int n;
-
     cin >> n;
 
+    int arr[n];
+
     for (int i = 0; i < n; i++) {
-        int q;
-        cin >> q;
-        a.push_back(q);
+        cin >> arr[i];
     }
 
     for (int m = 0; m < 1 << n; m++) {
@@ -24,9 +21,9 @@ int main() {
         int cur = m;
         for (int j = 0; j < n; j++) {
             if (cur % 2 == 1) {
-                s1 += a[j];
+                s1 += arr[j];
             } else {
-                s2 += a[j];
+                s2 += arr[j];
             }
             cur /= 2;
         }
