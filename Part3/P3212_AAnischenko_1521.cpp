@@ -3,16 +3,16 @@
 
 using namespace std;
 
-class List
-{
+class List {
     vector<int> v;
     int size, bottom, step, current, remains;
 
     static inline int next_pow(int x) {
         x--;
 
-        for(int i = 1; i <= 16; i *= 2)
+        for(int i = 1; i <= 16; i *= 2) {
             x |= x >> i;
+        }
 
         return x + 1;
     }
@@ -75,7 +75,7 @@ public:
         }
     }
 
-    int remaining(){
+    int remaining() {
         return remains;
     }
 
