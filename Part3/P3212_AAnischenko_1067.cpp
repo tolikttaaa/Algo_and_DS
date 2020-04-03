@@ -3,22 +3,22 @@
 
 using namespace std;
 
-struct tree {
-    tree() {
+struct Tree {
+    Tree() {
         this->name = "";
         this->children = {};
     }
 
-    tree(string name) {
+    Tree(string name) {
         this->name = name;
         this->children = {};
     }
 
     string name;
-    map< string, tree * > children;
+    map< string, Tree * > children;
 };
 
-void print_tree(tree *cur_tree, int depth) {
+void print_tree(Tree *cur_tree, int depth) {
     for (int i = 0; i < depth - 1; i++) {
         cout << " ";
     }
@@ -35,21 +35,21 @@ int main() {
     int n;
     cin >> n;
 
-    tree *tree_root = new tree();
+    Tree *tree_root = new Tree();
 
     for (int i = 0; i < n; i++) {
         string path;
         cin >> path;
         string dir;
 
-        tree *cur_tree = tree_root;
+        Tree *cur_tree = tree_root;
 
         for (int j = 0; j <= path.size(); j++) {
             if (path[j] == '\\' || path[j] == '\0') {
                 auto dir_tr = cur_tree->children.find(dir);
 
                 if (dir_tr == cur_tree->children.end()) {
-                    tree *new_tree = new tree(dir);
+                    Tree *new_tree = new Tree(dir);
                     cur_tree->children[dir] = new_tree;
                     cur_tree = cur_tree->children.find(dir)->second;
                 } else {
